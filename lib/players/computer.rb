@@ -77,23 +77,15 @@ module Players
     # return false if no opportunities return position if exists
     def can_win_opponent?(board)
       opponent_token = self.token == "X" ? "O" : "X"
-      get_winning_combos(board).each do |combo|
-        if combo.find {|p| board.taken?(p)} == opponent_token
-           return combo.find {|p| board.taken?(p) == false}
+      combos = get_winning_combos(board)
+      combos.each do |combo|
+        tokens = combo.collect {|p| board.position(p) if board.taken?(p)}
+        if tokens.compact[0] == opponent_token
+          return combo.find {|p| board.taken?(p) == false}
         end
       end
       false
     end
-      
-    #   combos = get_winning_combos(board)
-    #   combos.each do |combo|
-    #     tokens = combo.collect {|p| board.position(p) if board.taken?(p)}
-    #     if tokens.compact[0] == opponent_token
-    #       return combo.find {|p| board.taken?(p) == false}
-    #     end
-    #   end
-    #   false
-    # end
     
     # =====================================
     # 5 take center if open
