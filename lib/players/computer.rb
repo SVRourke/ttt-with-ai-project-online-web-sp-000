@@ -65,9 +65,11 @@ module Players
     # return false if none return 
     # position if exists
     def can_win_self?(board)
-      get_winning_combos(board).each do |combo|
-        if combo.find {|p| board.taken?(p)} == self.token
-           return combo.find {|p| board.taken?(p) == false}
+      combos = get_winning_combos(board)
+      combos.each do |combo|
+        tokens = combo.collect {|p| board.position(p) if board.taken?(p)}
+        if tokens.compact[0] == self.token
+          return combo.find {|p| board.taken?(p) == false}
         end
       end
       false
